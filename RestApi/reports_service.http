@@ -1,0 +1,12 @@
+@rest = {{$dotenv HOST}}
+
+### LEADS ACTION ###
+
+# @name report_leads
+
+POST {{rest}}/reports.php
+Content-Type: application/json
+
+{
+    "mobile_phone": "0989439678"
+}

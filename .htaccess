@@ -1,0 +1,41 @@
+
+# BEGIN SUGARCRM RESTRICTIONS
+RedirectMatch 403 (?i).*\.log$
+RedirectMatch 403 (?i)/+not_imported_.*\.txt
+RedirectMatch 403 (?i)/+(soap|cache|xtemplate|data|examples|include|log4php|metadata|modules)/+.*\.(php|tpl)
+RedirectMatch 403 (?i)/+emailmandelivery\.php
+RedirectMatch 403 (?i)/+custom/+blowfish
+RedirectMatch 403 (?i)/+cache/+diagnostic
+RedirectMatch 403 (?i)/+files\.md5$
+# END SUGARCRM RESTRICTIONS
+<IfModule mod_rewrite.c>
+    Options +SymLinksIfOwnerMatch
+    RewriteEngine On
+    RewriteBase /suitecrm
+    RewriteRule ^cache/jsLanguage/(.._..).js$ index.php?entryPoint=jslang&modulename=app_strings&lang=$1 [L,QSA]
+    RewriteRule ^cache/jsLanguage/(\w*)/(.._..).js$ index.php?entryPoint=jslang&modulename=$1&lang=$2 [L,QSA]
+    
+    # --------- DEPRECATED --------
+    RewriteRule ^api/(.*?)$ lib/API/public/index.php/$1 [L]
+    RewriteRule ^api/(.*)$ - [env=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+    # -----------------------------
+    
+    RewriteRule ^Api/access_token$ Api/index.php/access_token [L]
+    RewriteRule ^Api/V8/(.*?)$ Api/index.php/V8/$1 [L]
+    RewriteRule ^Api/(.*)$ - [env=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+</IfModule>
+<FilesMatch "\.(jpg|png|gif|js|css|ico)$">
+        <IfModule mod_headers.c>
+                Header set ETag ""
+                Header set Cache-Control "max-age=2592000"
+                Header set Expires "01 Jan 2112 00:00:00 GMT"
+        </IfModule>
+</FilesMatch>
+<IfModule mod_expires.c>
+        ExpiresByType text/css "access plus 1 month"
+        ExpiresByType text/javascript "access plus 1 month"
+        ExpiresByType application/x-javascript "access plus 1 month"
+        ExpiresByType image/gif "access plus 1 month"
+        ExpiresByType image/jpg "access plus 1 month"
+        ExpiresByType image/png "access plus 1 month"
+</IfModule>
